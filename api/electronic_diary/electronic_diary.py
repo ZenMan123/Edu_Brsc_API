@@ -1,3 +1,6 @@
+from typing import List
+
+
 class UsualDiaryOneSubject:
     """Class representing one subject in user diary
 
@@ -19,9 +22,9 @@ class UsualDiaryOneSubject:
     None
     """
 
-    def __init__(self, name: str, stype: str, time: str, homework: str, marks: str) -> None:
+    def __init__(self, name: str, subject_type: str, time: str, homework: str, marks: str) -> None:
         self.name = name
-        self.type = stype  # (intramural, extramural)
+        self.type = subject_type  # (intramural, extramural)
         self.time = time
         self.homework = homework
         self.marks = marks
@@ -54,7 +57,7 @@ class UsualDiaryOneDay:
 
     def __init__(self, date: str, no_lesson: bool = False) -> None:
         self.date = date
-        self.subjects = []
+        self.subjects: List[UsualDiaryOneSubject] = []
         self.no_lesson = no_lesson
 
     def add_subject(self, subject: UsualDiaryOneSubject) -> None:
@@ -109,7 +112,7 @@ class UsualDiaryOneWeek:
     """
 
     def __init__(self):
-        self.days = []
+        self.days: List[UsualDiaryOneDay] = []
 
     def add_day(self, one_day_diary: UsualDiaryOneDay) -> None:
         """Adds one day to the diary"""

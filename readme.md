@@ -4,14 +4,14 @@
 Этот проект предоставляет возможность удобно получать данные из электронного дневника https://elschool.ru/.
 Например, для получения дневника с расписанием, домашкой и оценками достаточно написать:
 ```python
-from electronic_diary_session import ElectronicDiarySession
+from api.electronic_diary.electronic_diary_session import ElectronicDiarySession
 
 session = ElectronicDiarySession(USER_LOGIN, USER_PASSWORD)
 print(session.get_usual_diary())
 ```
 А для того чтобы просто получить дневник и удобно с ним работать можно написать:
 ```python
-from electronic_diary_session import ElectronicDiarySession
+from api.electronic_diary.electronic_diary_session import ElectronicDiarySession
 
 session = ElectronicDiarySession(USER_LOGIN, USER_PASSWORD)
 diary = session.get_usual_diary()
@@ -31,15 +31,15 @@ third_subject_on_tuesday = tuesday[3]
 print(third_subject_on_tuesday)
 
 # Узнаем дз на этот урок
-print(third_subject_on_tuesday.homeword)
+print(third_subject_on_tuesday.homework)
 ```
 
 Также, есть возможность посмотреть основную информацию о пользователе:
 ```python
-from electronic_diary_session import ElectronicDiarySession
+from api.electronic_diary.electronic_diary_session import ElectronicDiarySession
 
 session = ElectronicDiarySession(USER_LOGIN, USER_PASSWORD)
-print(session.tell_about_user())
+print(session.get_user())
 ```
 ---
 

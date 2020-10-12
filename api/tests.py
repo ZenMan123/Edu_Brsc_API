@@ -1,7 +1,7 @@
 import pytest
 
-from electronic_diary_session import ElectronicDiarySession
-from electronic_diary_errors import WrongLoginOrPasswordError
+from api.electronic_diary.electronic_diary_session import ElectronicDiarySession
+from api.electronic_diary.electronic_diary_errors import WrongLoginOrPasswordError
 
 
 def test_wrong_login_or_password():

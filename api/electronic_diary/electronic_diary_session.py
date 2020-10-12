@@ -1,10 +1,9 @@
 from requests import Session, Response
 
-from electronic_diary_errors import WrongLoginOrPasswordError
-from electronic_diary_user import ElectronicDiaryUser
-from usual_diaries import *
-from electronic_diary_parser import *
-from electronic_diary_user import ElectronicDiaryUser
+from api.electronic_diary.electronic_diary import UsualDiaryOneWeek, UsualDiaryOneDay, UsualDiaryOneSubject
+from api.electronic_diary.electronic_diary_errors import WrongLoginOrPasswordError
+from api.electronic_diary.electronic_diary_parser import *
+from api.electronic_diary.electronic_diary_user import ElectronicDiaryUser
 
 import datetime
 
@@ -29,9 +28,9 @@ class ElectronicDiarySession(Session):
     DIARY_RESULTS_URL: str
         Url address for the page with result of the quarter and year on each subject for the user
 
-    USER-AGENT: str
+    USER_AGENT: str
         Value for key "user-agent" in http request headers
-    user: ElectronicDiaryUser
+    _user: ElectronicDiaryUser
         Object representing user
 
     METHODS
@@ -87,7 +86,7 @@ class ElectronicDiarySession(Session):
         """
 
         super().__init__()
-        self.user = ElectronicDiaryUser(user_login, user_password)  # Object representing user
+        self._user = ElectronicDiaryUser(user_login, user_password)  # Object representing user
         self._set_headers_user_agent()  # To make page think that we are not a robot
         self._register_user()  # Registering user with the given login and password
         self._set_user_metadata()  # Finding info about user school and his id
@@ -107,8 +106,8 @@ class ElectronicDiarySession(Session):
 
         # Creating dict for GET request with login and password
         data = {
-            'login': self.user.login,
-            'password': self.user.password
+            'login': self._user._login,
+            'password': self._user._password
         }
         response = self.post(self.REGISTRATION_URL, data=data)  # Http request
 
@@ -124,11 +123,11 @@ class ElectronicDiarySession(Session):
         meta = get_metadata_from_private_office(response.text)  # Getting metadata for user
 
         # Setting found values
-        self.user.name = meta.user_name
-        self.user.meta.id = meta.user_id
-        self.user.meta.district_id = meta.district_id
-        self.user.meta.school_id = meta.school_id
-        self.user.meta.class_id = meta.class_id
+        self._user._name = meta.user_name
+        self._user._meta.id = meta.user_id
+        self._user._meta.district_id = meta.district_id
+        self._user._meta.school_id = meta.school_id
+        self._user._meta.class_id = meta.class_id
 
     def _set_headers_user_agent(self) -> None:
         """Function that sets user-agent value in http request
@@ -201,10 +200,10 @@ class ElectronicDiarySession(Session):
 
         # Http request parameters
         request_params = {
-            'rooId': self.user.meta.district_id,
-            'instituteId': self.user.meta.school_id,
-            'departmentId': self.user.meta.class_id,
-            'pupilId': self.user.meta.id,
+            'rooId': self._user._meta.district_id,
+            'instituteId': self._user._meta.school_id,
+            'departmentId': self._user._meta.class_id,
+            'pupilId': self._user._meta.id,
             'year': year,
             'week': week_number,
             'log': 'false'
@@ -231,10 +230,10 @@ class ElectronicDiarySession(Session):
             raise WrongLoginOrPasswordError
 
     def get_user(self) -> ElectronicDiaryUser:
-        return self.user
+        return self._user
 
     def get_usual_diary(self) -> UsualDiaryOneWeek:
         """That methods shows us current page of the diary"""
 
-        current_date = datetime.date(2020, 2, 18)
+        current_date = datetime.datetime.now()
         return self._get_diary_usual(year=current_date.year, month=current_date.month, day=current_date.day)

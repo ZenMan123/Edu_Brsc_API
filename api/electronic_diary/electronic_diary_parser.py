@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from meta import Meta
+from api.meta import Meta
 
 from typing import List
 
@@ -99,7 +99,6 @@ def get_metadata_from_private_office(html_code: str) -> Meta:
                                                             'personal-data__info-value_bold'}).text
 
     meta = Meta()
-
     meta.user_name = user_name
     meta.user_id = user_id
     meta.district_id = user_metadata[2]
